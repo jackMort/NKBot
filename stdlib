@@ -1,0 +1,99 @@
+#!/bin/echo Warning: this library should be sourced!
+#
+# Copyright (C) 2009 Lech Twarog <lech.twaro@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+
+format_time()
+{
+	TIME=$1
+
+	HOUR=3600
+	MIN=60
+
+	result=''
+	H=`expr $TIME / $HOUR`
+	TIME=`expr $TIME % $HOUR`
+	M=`expr $TIME / $MIN`	
+	TIME=`expr $TIME % $MIN`	
+	S=$TIME
+	if [ $H -lt 10 ]
+	then
+		H="0$H"
+	fi
+
+	if [ $M -lt 10 ]
+	then
+		M="0$M"
+	fi	
+
+	if [ $S -lt 10 ]
+	then
+		S="0$S"
+	fi		
+
+	echo "$H:$M:$S"
+}
+
+def_colors()
+{
+	# attributes
+	normal='\033[0m'; bold='\033[1m'; dim='\033[2m'; under='\033[4m'
+	italic='\033[3m'; noitalic='\033[23m'; blink='\033[5m'
+	reverse='\033[7m'; conceal='\033[8m'; nobold='\033[22m'
+	nounder='\033[24m'; noblink='\033[25m'
+	# foreground
+	black='\033[30m'; red='\033[31m'; green='\033[32m'; yellow='\033[33m'
+	blue='\033[34m'; magenta='\033[35m'; cyan='\033[36m'; white='\033[37m'
+	#background
+	bblack='\033[40m'; bred='\033[41m'
+	bgreen='\033[42m'; byellow='\033[43m'
+	bblue='\033[44m'; bmagenta='\033[45m'
+	bcyan='\033[46m'; bwhite='\033[47m'
+}
+
+debug() 
+{
+	echo -e "$blue[`date +"%Y-%m-%d %H:%M:%S"`]$normal -- $@"
+}
+
+runInBackground()
+{
+	$*&
+}
+
+date2stamp () {
+   date --utc --date "$1" +%s
+}
+
+stamp2date (){
+    date --utc --date "1970-01-01 $1 sec" "+%Y-%m-%d %T"
+}
+
+dateDiff (){
+    case $1 in
+        -s)   sec=1;      shift;;
+        -m)   sec=60;     shift;;
+        -h)   sec=3600;   shift;;
+        -d)   sec=86400;  shift;;
+        *)    sec=86400;;
+    esac
+    dte1=$(date2stamp $1)
+    dte2=$(date2stamp $2)
+    diffSec=$((dte2-dte1))
+    if ((diffSec < 0)); then abs=-1; else abs=1; fi
+    echo $((diffSec/sec*abs))
+}
+
