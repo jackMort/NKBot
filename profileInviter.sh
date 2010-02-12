@@ -14,18 +14,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-# Changelog
-# 	* 2008-08-03 22:13:02
-# 		- updated getTicket
-#
-# 	* 2008-08-04 11:06:09
-# 		- updated invite ( debug nk notification )
-#
-# 	* 2008-08-04 23:32:12
-# 		- updated getTicket
-#
-# Last Modified: 2010-02-12 08:57:57
 
 source configuration
 source stdlib
@@ -122,10 +110,12 @@ do
 		then
 			stats=( `./getStats $[ $i - 1 ]` )
 			friends=${stats[0]}
-			mails=${stats[1]}
+			mails=$(( ${stats[1]}+0 ))
 			if [ $mails -gt 0 ] 
 			then
 				mail_info=", new emails ${bold}${green}$mails${normal}"
+			else
+				mail_info=""
 			fi
 			
 
