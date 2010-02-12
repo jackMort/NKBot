@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Copyright (C) 2010 Lech Twarog <lech.twaro@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+source configuration
+source stdlib
+source nk_lib
+
+analizeFile() 
+{
+	result=( 0 0 )
+	if [ -d $PROFILES_TMP/INVITED ] 
+	then
+		profile=$1
+		profile_file=$PROFILES_TMP/INVITED/$profile
+		#
+		result[0]=`cat $profile_file| grep "Twoi znajomi (.*)"| head -n 1| sed -e 's/<[^>]*>//g' | sed -e 's/.*(\(.*\))/\1/'`
+		result[1]=`cat $profile_file| grep "Skrzynka odbiorcza <.*>(.*)</.*"| head -n 1| sed -e 's/<[^>]*>//g' | sed -e 's/.*(\(.*\))/\1/'`
+	fi
+	echo ${result[@]}
+}
+
+analizeFile $1
+# vim: fdm=marker ts=4 sw=4 sts=4

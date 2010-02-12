@@ -25,7 +25,7 @@
 # 	* 2008-08-04 23:32:12
 # 		- updated getTicket
 #
-# Last Modified: 2009-10-12 13:00:55
+# Last Modified: 2010-02-12 08:57:57
 
 source configuration
 source stdlib
@@ -83,7 +83,7 @@ invite()
 		then
 			s_color=$green
 		fi
-		debug "... $s_color$message$normal"
+		debug "... invite $bold$profile$normal $s_color$message$normal"
 
 		case $RESPONSE in
 			*200*) return 2 ;;
@@ -120,7 +120,16 @@ do
 	do
 		if [ `date +'%M'` -lt $WORK_TO_MINUTE ]
 		then
-			debug "starting with: $bold$i$normal"
+			stats=( `./getStats $[ $i - 1 ]` )
+			friends=${stats[0]}
+			mails=${stats[1]}
+			if [ $mails -gt 0 ] 
+			then
+				mail_info=", new emails ${bold}${green}$mails${normal}"
+			fi
+			
+
+			debug "your friends ${bold}${red}${friends}${normal}$mail_info"
 			invite $i
 			response=$?
 			case $response in
