@@ -101,7 +101,9 @@ debug "Loged as $bold$USER$normal!"
 getTicket
 
 LAST_ID=`cat $LAST_ID_FILE`
-for i in `seq $LAST_ID $MAX_ID`
+i=$LAST_ID
+
+while [ $i -lt $MAX_ID ]
 do	
 	NOT_SUCCESS=true
 	while $NOT_SUCCESS
@@ -147,6 +149,7 @@ do
 
 	# save last_id
 	echo $i > $LAST_ID_FILE
+	i=$(( $i + 1 ))
 	# get random sleep
 	let sl=$RANDOM%$RANDOM_SLEEP+$RANDOM_SLEEP_FROM
 	debug "going sleep to $bold$sl${normal}s."
