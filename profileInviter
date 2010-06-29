@@ -62,7 +62,7 @@ invite()
 		profile_file=$PROFILES_TMP/INVITED/$profile
 
 		INVITE_TICKET=`cat $INVITE_TICKET_FILE`
-		RESPONSE=`$WGET --load-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="t=$INVITE_TICKET" http://nasza-klasa.pl/invite/$profile -O $profile_file 2>&1|egrep "HTTP|Length|saved"`
+		RESPONSE=`$WGET --load-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="t=$INVITE_TICKET" http://nk.pl/invite/$profile -O $profile_file 2>&1|egrep "HTTP|Length|saved"`
 
 		message=`cat $profile_file | grep notification_1 -A1 | grep '</div>'| sed -e 's/<[^>]*>//g'`
 		s_color=$red

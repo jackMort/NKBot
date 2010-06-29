@@ -18,7 +18,7 @@
 
 login()
 {
-	$WGET --save-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="login=$USER&password=$PASS&remember=1" http://nasza-klasa.pl/login -O index.html 2> /dev/null
+	$WGET --save-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="login=$USER&password=$PASS&remember=1" http://nk.pl/login -O index.html 2> /dev/null
 }
 
 isLogged() 
@@ -27,7 +27,7 @@ isLogged()
 	then	
 		success=1	
 		TITLE=`cat $INDEX_FILE | grep '<title>'`
-		EXPECTED='<title>nasza-klasa.pl - Strona główna</title>'
+		EXPECTED='<title>nk.pl - Strona główna</title>'
 		if [ "$TITLE" = "$EXPECTED" ]
 		then
 			success=0
