@@ -38,7 +38,7 @@ createReaport()
 		profiles_p_m=`echo "scale=2; $all_profiles/$date_diff"|bc`
 	fi
 	
-	echo -e " *** REPORT\n-----\n $start_time , stop at $now \n-----\nPROFILES VIEWED: $all_profiles\nPROFILES/MIN   : $profiles_p_m"
+	clear && echo -e " $bold$green*** REPORT $start_time, $now ***$normal \n\n PROFILES VIEWED: $bold$blue$all_profiles$normal\n PROFILES/MIN   : $bold$blue$profiles_p_m$normal \n\n"
 	
 }
 
