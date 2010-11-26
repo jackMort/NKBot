@@ -66,7 +66,7 @@ invite()
 
 		message=`cat $profile_file | grep notification_1 -A1 | grep '</div>'| sed -e 's/<[^>]*>//g'`
 		s_color=$red
-
+		
 		if [ "$message" == "$SEND_MESSAGE_SUCCESS_PATTERN" ]
 		then
 			s_color=$green
@@ -110,35 +110,42 @@ do
 	do
 		if [ `date +'%M'` -lt $WORK_TO_MINUTE ]
 		then
-			stats=( `./getStats $[ $i - 1 ]` )
-			friends=${stats[0]}
-			mails=$(( ${stats[1]}+0 ))
-			if [ $mails -gt 0 ] 
-			then
-				mail_info=", new emails ${bold}${green}$mails${normal}"
-			else
-				mail_info=""
-			fi
-			
+			# add filters
+			success_filtered=0
+			last_filter=""
+			for filter in filters/*.filter
+			do
+				if [ -x $filter ] && [ $success_filtered -eq 0 ]
+				then
+					last_filter=`basename $filter`
+					#debug " filtering by: ${bold}${last_filter}${normal} ..."
+					$filter $i || success_filtered=1
+				fi
+			done
 
-			debug "your friends ${bold}${red}${friends}${normal}$mail_info"
-			invite $i
-			response=$?
-			case $response in
-				2) 
+			if [ $success_filtered -eq 0 ]
+			then
+				invite $i
+				response=$?
+				case $response in
+					2) 
+					NOT_SUCCESS=false
+					;;
+					4) 
+					debug "... ${bold}404 Not Found$normal"
+					NOT_SUCCESS=false
+					;;
+					5)
+					debug "... ${red}${bold}500 KICK $normal"
+					debug "KICK" >> error.err
+					sleep 10
+					;;
+					*) debug "OTHER RESPONSE: $response"
+				esac
+			else
 				NOT_SUCCESS=false
-				;;
-				4) 
-				debug "... ${bold}404 Not Found$normal"
-				NOT_SUCCESS=false
-				;;
-				5)
-				debug "... ${red}${bold}500 KICK $normal"
-				debug "KICK" >> error.err
-				sleep 10
-				;;
-				*) debug "OTHER RESPONSE: $response"
-			esac
+				debug "${bold}FILTER ${red}$last_filter${normal}${bold} DROPED USER ${red}$i ${normal} ..."
+			fi
 		else
 			tofull=$[ 60 - `date +'%M'` ] 
 			debug "... waiting to hour, $bold$tofull${bold}m. left"
@@ -150,6 +157,7 @@ do
 	# save last_id
 	echo $i > $LAST_ID_FILE
 	i=$(( $i + 1 ))
+
 	# get random sleep
 	let sl=$RANDOM%$RANDOM_SLEEP+$RANDOM_SLEEP_FROM
 	debug "going sleep to $bold$sl${normal}s."
