@@ -44,8 +44,12 @@ createReaport()
 
 cleanUp()
 {
-
+	mkdir $WORKING_DIRECTORY 2> /dev/null
+	mkdir $PROFILES 2> /dev/null
+	mkdir $PROFILES_TMP 2> /dev/null
 	rm $INDEX_FILE $COOKIES_FILE 2> /dev/null
+	[ -f $LAST_ID_FILE ] || echo "1" >> $LAST_ID_FILE # welcome mr. Gąbka !
+
 }
 
 getTicket()

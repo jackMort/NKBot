@@ -18,7 +18,7 @@
 
 login()
 {
-	$WGET --save-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="login=$USER&password=$PASS&remember=1" http://nk.pl/login -O index.html 2> /dev/null
+	$WGET --save-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" --post-data="login=$USER&password=$PASS&remember=1" http://nk.pl/login -O $INDEX_FILE 2> /dev/null
 }
 
 isLogged() 
