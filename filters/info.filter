@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Copyright (C) 2009 Lech Twarog <lech.twaro@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# 0.base.filter is required !
+
+source configuration
+source stdlib
+source nk_lib
+
+def_colors
+
+profile=$1
+name=`cat $FILTER_TMP_PAGE |grep -A1 Imię |grep content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
+surname=`cat $FILTER_TMP_PAGE |grep -A1 Nazwisko |grep content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
+phone=`cat $FILTER_TMP_PAGE |grep -A1 Telefon |grep second_content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
+year=`cat $FILTER_TMP_PAGE |grep -A1 Wiek |grep second_content| grep -o "[0-9]*"`
+city=`cat $FILTER_TMP_PAGE |grep -A1 Miejscowość |grep second_content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
+
+if [ "$name" != "" ] && [ "$surname" != "" ]
+then
+	echo "$profile|$name|$surname|$city|$year|$phone" >> $WORKING_DIRECTORY/db.csv
+	debug "... ${green}profile: ${bold}$name $surname $city${green} ${red}[SAVED]${normal}"
+fi
+
