@@ -29,10 +29,17 @@ surname=`cat $FILTER_TMP_PAGE |grep -A1 Nazwisko |grep content | sed -e 's/<[^>]
 phone=`cat $FILTER_TMP_PAGE |grep -A1 Telefon |grep second_content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
 year=`cat $FILTER_TMP_PAGE |grep -A1 Wiek |grep second_content| grep -o "[0-9]*"`
 city=`cat $FILTER_TMP_PAGE |grep -A1 Miejscowość |grep second_content | sed -e 's/<[^>]*>//g'| tr -d "[:space:]"`
+image=`cat $FILTER_TMP_PAGE |grep -n1 'notice_holder_profile_notice' | grep -o 'http://photos.nasza-klasa.pl/[^"]*' | head -n1`
+
+if [ "$image" != "" ]
+then
+	$WGET --load-cookies="$COOKIES_FILE" --user-agent="$USER_AGENT" $image -O $WORKING_DIRECTORY/images/$profile.jpeg -o /dev/null
+	debug "   ... retriving image ${bold}${image}${normal}"
+fi
 
 if [ "$name" != "" ] && [ "$surname" != "" ]
 then
-	echo "$profile|$name|$surname|$city|$year|$phone" >> $WORKING_DIRECTORY/db.csv
-	debug "... ${green}profile: ${bold}$name $surname $city${green} ${red}[SAVED]${normal}"
+	echo "$profile|$name|$surname|$city|$year|$phone|$image" >> $WORKING_DIRECTORY/db.csv
+	debug "... ${green}profile: ${bold}$name $surname $city ${green} ${red}[SAVED]${normal}"
 fi
 
